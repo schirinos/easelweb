@@ -1,0 +1,39 @@
+<div class="easelweb-toolbar">
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+            <a class="navbar-brand" data-action="toggle" href="#"></a>
+        </div>
+        <p class="navbar-text navbar-right easelweb-location-toggle">
+            <a class="navbar-link" data-action="location" href="#"><span class="ewicon-expand"></span></a>
+        </p>
+        <div class="container">
+            <ul class="nav navbar-nav navbar-main on">
+                <li><a data-action="save" href="#">Save</a></li>
+                <li><a data-action="publish" href="#">Publish</a></li>
+                <li class="pull-right"><a data-action="logout" data-bind="logout" href="#">Logout</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-widget" data-bind="widgetNav">
+                <li><a data-action="settings" href="#">Properties</a></li>
+                <li><a data-action="source" href="#">Source</a></li>
+                <li><a data-action="hide" href="#">Close</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-image">
+                <li><a data-action="updateimage" href="#">Update Image</a></li>
+                <li><a data-action="cancelimage" href="#">Cancel</a></li>
+            </ul>
+            <p class="navbar-text navbar-right" data-bind="status"></p>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="easelweb-drawer easelweb-message" data-bind="msgDrawer"></div>
+        <div class="easelweb-drawer easelweb-source-editor" data-bind="srcEditorDrawer"></div>
+        <div class="easelweb-drawer easelweb-widget-editor" data-bind="widgetEditorDrawer">
+            <div class="row">
+                <div class="col-md-6 easelweb-widget-form">
+                </div>
+                <div class="col-md-6 easelweb-widget-preview">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

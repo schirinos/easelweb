@@ -1,0 +1,205 @@
+/* Easelweb styles */
+
+/* Fonts */
+@font-face {
+    font-family: 'easelweb';
+    src:url('fonts/easelweb.eot');
+    src:url('fonts/easelweb.eot?#iefix') format('embedded-opentype'),
+        url('fonts/easelweb.woff') format('woff'),
+        url('fonts/easelweb.ttf') format('truetype'),
+        url('fonts/easelweb.svg#easelweb') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="ewicon-"], [class*=" ewicon-"] {
+    font-family: 'easelweb';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ewicon-settings:before {
+    content: "\e600";
+}
+.ewicon-new:before {
+    content: "\e601";
+}
+.ewicon-remove:before {
+    content: "\e602";
+}
+.ewicon-expand:before {
+    content: "\e603";
+}
+.ewicon-vimeo:before {
+    content: "\e604";
+}
+.ewicon-youtube:before {
+    content: "\e605";
+}
+.ewicon-bold:before {
+    content: "\e606";
+}
+.ewicon-underline:before {
+    content: "\e607";
+}
+.ewicon-italic:before {
+    content: "\e608";
+}
+.ewicon-link:before {
+    content: "\e609";
+}
+.ewicon-unordered-list:before {
+    content: "\e60a";
+}
+.ewicon-ordered-list:before {
+    content: "\e60b";
+}
+.ewicon-image:before {
+    content: "\e60c";
+}
+.ewicon-clear-formatting:before {
+    content: "\e60e";
+}
+
+
+
+
+/* Toolbar */
+.easelweb-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.easelweb-toolbar .container {
+    display: none;
+}
+.easelweb-toolbar.open .container {
+    display: inherit;
+}
+.easelweb-toolbar .navbar {
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, .95);
+    color: #ffffff;
+    border:none;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+.easelweb-toolbar.open .navbar {
+    width:100%;
+}
+.easelweb-toolbar .navbar .navbar-brand {
+    background-image: url("img/easelweb_icon.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    height: 41px;
+    width: 29px;
+    margin-left:10px;
+    margin-top: 3px;
+}
+.easelweb-toolbar .navbar .navbar-nav > li > a {
+    color:#ffffff;
+}
+.easelweb-location-toggle {
+    font-size: 18px;
+    color: #ffffff;
+}
+
+/* Toolbar Bottom orientation */
+.easelweb-toolbar.bottom {
+    top: auto;
+    bottom: 0px;
+}
+.easelweb-toolbar.bottom .easelweb-drawer.open {
+    position: absolute;
+    width: 100%;
+    bottom: 50px;
+}
+.easelweb-toolbar.bottom .container {
+    position: relative;
+}
+
+
+/* Toolbar Nav Sections */
+.easelweb-toolbar .navbar-nav {
+    display: none;
+}
+.easelweb-toolbar .navbar-nav.on {
+    display: inherit;
+}
+
+/* Toolbar Drawers */
+.easelweb-drawer {
+    position: relative;
+    z-index: 100;
+    border: 1px solid #000000;
+    border-top: none;
+    display: none;
+    -webkit-box-shadow: 0px 0px 4px 0px #000000;
+          box-shadow: 0px 0px 4px 0px #000000;
+    background-color: #ffffff;
+}
+.easelweb-drawer.open {
+    display: block;
+}
+.easelweb-drawer .Codemirror {
+    z-index: 3;
+}
+
+/* Widget Editor */
+.easelweb-widget-editor {
+    padding-top: 20px;
+}
+.easelweb-widget-editor ul.form-control {
+    border: none;
+    box-shadow: none;
+}
+.easelweb-widget-editor ul.form-control li {
+    list-style: none;
+}
+.easelweb-widget-editor .easelweb-widget-form form {
+    padding-left: 10px;
+}
+.easelweb-widget-upload {
+    display: none;
+}
+.easelweb-widget-upload.on {
+    display: inherit;
+}
+
+/* Uploader */
+.easelweb-widget-uploader .progress {
+    display: inline-block;
+}
+.easelweb-widget-uploader .progress .progress-bar {
+    position: relative;
+    top: -100%;
+}
+
+/* Widgets */
+.easelweb-active .easelweb-widget {
+    outline:1px dotted blue;
+}
+.easelweb-active .easelweb-widget:hover {
+    outline:2px solid #999999;
+}
+
+/* Widget toolbar */
+.easelweb-widget-toolbar .btn {
+    border-radius: 0;
+}
+
+/* Easelweb widgets */
+

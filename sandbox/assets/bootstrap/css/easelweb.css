@@ -1,0 +1,17 @@
+/* Overrides */
+body {}
+
+.narrow-container {
+	width: auto;
+	max-width: 680px;
+	padding: 0 15px;
+}
+
+/* Title */
+.easelweb-title {
+	background-image: url('/images/easelweb_icon_black.png');
+	background-repeat: no-repeat;
+	height: 41px;
+	padding-left: 35px;
+	padding-top: 2px;
+}

@@ -166,9 +166,9 @@ class Easelweb {
         $session = EpiSession::getInstance(EpiSession::PHP);
 
         // Only allow authorized
-        //if($session->get($config['authvar']) !== true) {
-           //getRoute()->redirect($config['home_url']); 
-        //}
+        if($session->get($config['authvar']) !== true) {
+           getRoute()->redirect($config['home_url']); 
+        }
 
         // Do we have a sandbox area defined in the config
         if (empty($config['sandbox']['sandbox_path'])) {

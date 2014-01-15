@@ -49,16 +49,20 @@ class Easelweb {
 
         // Read folders in version directory 
         $all_files = scandir($config['versions_path']);
-        $files = array_diff($all_files, array('.', '..'));
 
-        // Sort array
-        rsort($files, SORT_NUMERIC);
+        // Were there any files in the directory
+        if (is_array($all_files) && !empty($all_files)) {
+            $files = array_diff($all_files, array('.', '..'));
 
-        // Delete the oldest folders if we have more than 5
-        if (count($files) > 5) {
-            $to_delete = array_slice($files, 5);
-            foreach ($to_delete as $value) {
-                self::deleteDir($config['versions_path'].$value);   
+            // Sort array
+            rsort($files, SORT_NUMERIC);
+
+            // Delete the oldest folders if we have more than 5
+            if (count($files) > 5) {
+                $to_delete = array_slice($files, 5);
+                foreach ($to_delete as $value) {
+                    self::deleteDir($config['versions_path'].$value);   
+                }
             }
         }
     }
@@ -245,7 +249,10 @@ class Easelweb {
      */
     private static function isDescendantPath($path1, $path2) 
     {
-        if (strlen(str_replace($path1, '', $path2)) < strlen($path2)) {
+        $check1 = strlen(str_replace($path1, '', $path2));
+        $check2 = strlen($path2);
+
+        if ($check1 < $check2 && ($check1 !== 0)) {
             return true;
         } else {
             return false;
@@ -259,7 +266,10 @@ class Easelweb {
      */
     private static function isAncestorPath($path1, $path2) 
     {   
-        if (strlen(str_replace($path2, '', $path1)) < strlen($path1)) {
+        $check1 = strlen(str_replace($path2, '', $path1));
+        $check2 = strlen($path1);
+
+        if ($check1 < $check2 && ($check1 !== 0)) {
             return true;
         } else {
             return false;
@@ -274,7 +284,7 @@ class Easelweb {
      * @param array $root The root directory the the $filter files and directories are relative to
      */
     private static function recurseCopy($src, $dst, $filter = NULL, $root = NULL) 
-    {
+    {   
         // Store created
         $created = array();
 
@@ -302,13 +312,15 @@ class Easelweb {
             if (( $file != '.' ) && ( $file != '..' )) { 
                 // Do we have a filter set
                 if (isset($filter) && is_array($filter) && isset($root)) {
-
                     // Check filters to see if we need to process this file or director
                     $docopy = false;
-                    foreach ($filter as $key => $value) {
-                        if (self::isDescendantPath($src.'/'.$file, $root.$value) || self::isAncestorPath($src.'/'.$file, $root.$value)) {
-                            
-                            $docopy = true;
+                    foreach ($filter as $value) {
+                        // Do not allow empty filter values because that will lead to 
+                        // a recursive loop
+                        if (!empty($value)) {
+                            if (self::isDescendantPath($src.'/'.$file, $root.$value) || self::isAncestorPath($src.'/'.$file, $root.$value) || ($src.'/'.$file === $root.$value)) {
+                                $docopy = true;
+                            }
                         } 
                     }
 
@@ -328,7 +340,7 @@ class Easelweb {
 
                 } else {
                 // Don't check filters
-                    if ( is_dir($src . '/' . $file) ) {
+                    if ( is_dir($src.'/'.$file) ) {
                         // Copy directory without filters set
                         $created = array_merge($created, self::recurseCopy($src . '/' . $file,$dst . '/' . $file)); 
                     } 

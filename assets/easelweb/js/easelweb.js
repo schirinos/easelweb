@@ -31,8 +31,9 @@ function (Backbone, Vent, etch, ToolbarView, WidgetView, WidgetModel) {
     // Default application configuration
     app.config = {
         // Selector used to find easelweb widgets and regions
-        selector: '[data-ew-widget]',
+        widgetSelector: '[data-ew-widget]',
         regionSelector: '[data-ew-uri]',
+        regionSelectorPlain: 'data-ew-uri',
 
         // Activated widget class
         widgetClass: 'easelweb-widget',
@@ -78,11 +79,11 @@ function (Backbone, Vent, etch, ToolbarView, WidgetView, WidgetModel) {
         // Track the dom elements marked as regions (data-ew-uri)
         // We use the uri info later to update back on the server.
         $(app.config.regionSelector).each(function (idx, elem) {
-            app.regions.push(elem);
+            app.regions.push('['+app.config.regionSelectorPlain+'="'+$(elem).attr(app.config.regionSelectorPlain)+'"]');
         });
 
         // Initialize easelweb widgets
-        $(app.config.selector).each(function (idx, elem) {
+        $(app.config.widgetSelector).each(function (idx, elem) {
             app.initWidget(elem);
         });
 
@@ -109,17 +110,12 @@ function (Backbone, Vent, etch, ToolbarView, WidgetView, WidgetModel) {
         // Create the widget view
         var view = new WidgetView({el: elem, model: new WidgetModel(), app: app});
 
-        // Attach id of view to the DOM element of the view.
-        // This is used later to know which view a dom element belongs to.
-        // NOTE: This will not work on <embed> <applet> and <object> (except flash) tags
-        view.$el.data('cid', view.cid);
-
         // Store widget view in registry
         app.widgets.push({view: view, id: view.cid});
 
         // Look for child widgets
         if (hasChildren) {
-            view.$(app.config.selector).each(function (idx, elem) {
+            view.$(app.config.widgetSelector).each(function (idx, elem) {
                 app.initWidget(elem);
             });
         }
@@ -148,28 +144,10 @@ function (Backbone, Vent, etch, ToolbarView, WidgetView, WidgetModel) {
      * @param {object} widget The widget to remove
      */
     app.removeWidget = function (widget) {
-        // Remove from dom
-        widget.remove();
-
         // Remove from tracking array
         app.widgets = _.reject(app.widgets, function (item) {
             return widget.cid === item.id;
         });
-    };
-
-    /**
-     * Remove a widget using its client id
-     * @param {string} cid The client id of the widget to remove
-     */
-    app.removeWidgetById = function (cid) {
-        // Find the widget in the application's widgets array
-        var widget = _.find(app.widgets, function (item) {
-            return item.id === cid;
-        });
-
-        if (widget) {
-            app.removeWidget(widget);
-        }
     };
 
     /**
@@ -179,13 +157,12 @@ function (Backbone, Vent, etch, ToolbarView, WidgetView, WidgetModel) {
         // Remove easelweb toolbar
         app.toolbar.remove();
 
-        // Temporarily remove events
-        _.each(app.widgets, function (view, key, list) {
-            view.undelegateEvents();
+        // Disable all widget event listeners
+        _.each(app.widgets, function (widget, key, list) {
+            widget.view.undelegateEvents();
         });
 
         // Remove the editable class from all elements
-        $('.'+app.config.widgetClass).removeClass('on');
         $('.'+app.config.widgetClass).removeClass(app.config.widgetClass);
     };
 

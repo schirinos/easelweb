@@ -11,7 +11,7 @@ return array(
     // Authentication
     'authvar' => 'authorized',
     'username' => 'demo',
-    'password' => 'demored123!',
+    'password' => 'demored123!werw',
 
     // URL paths
     'login_url' => $easelweb_root_url.'/login/',

@@ -203,10 +203,10 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
             // Disable widgets before saving
             this.app.disableWidgets();
 
-            // Iterate through regions
-            _.each(this.app.regions, function (region, key, list) {
+            // Iterate through region selectors
+            _.each(this.app.regions, function (selector, key, list) {
                 // Do our work on clone of region
-                $region = $(region).clone();
+                $region = $(selector).clone();
 
                 // Extract region metadata
                 var uri = $region.attr('data-ew-uri');
@@ -353,6 +353,7 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
             if (!this.sourceEditor) {
                 // Init code mirror, and append to the drawer
                 this.sourceEditor = CodeMirror(this.$srcEditorDrawer[0], {
+                    lineWrapping: true,
                     mode: "text/html",
                     lineNumbers: true,
                     autofocus: true
@@ -362,13 +363,10 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
                 this.sourceEditor.setSize(null, $(window).height() * 0.8);
 
                 // Auto update source changes
-                this.sourceEditor.on('change', function () {
+                this.sourceEditor.on('change', _.debounce(function () {
                     if (self.currentWidget) {
                         // Set html of widget to editor source code
                         self.currentWidget.updateHTML(self.sourceEditor.getValue());
-
-                        // Re-init widget schema (used to generate the widget form)
-                        self.currentWidget.generateSchema();
 
                         // Re-create widget form
                         self._clearWidgetForm();
@@ -377,7 +375,7 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
                         self.initWidgetForm();
                     }
                     
-                });
+                }, 500));
             }
         },
         /**
@@ -505,8 +503,9 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
             // Hide other drawers
             this.hideDrawers();
 
-            // Show the source editor drawer
+            // Show the widget nav and source editor drawer
             this.$srcEditorDrawer.addClass('open');
+            this.$widgetNav.addClass('on');
 
             // Set editor content and refresh codemirror editor
             this.sourceEditor.setValue(this.currentWidget.el.outerHTML);
@@ -519,10 +518,8 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
             // Hide other drawers
             this.hideDrawers();
 
-            // Display widget editor drawer
+            // Display widget nav and editor drawer
             this.$widgetEditorDrawer.addClass('open');
-
-            // Show the widget toolbar
             this.$widgetNav.addClass('on');
         },
         /**

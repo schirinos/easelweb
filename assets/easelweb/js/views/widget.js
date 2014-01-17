@@ -13,7 +13,7 @@ function (Vent, BaseView, etch) {
          * Attributes on the widget the we don't allow editing through the widget editor form.
          * @type {array}
          */
-        blockedAttr: ['data-ew-widget', 'data-ew-uri', 'contenteditable'],
+        blockedAttr: ['data-ew-widget', 'data-ew-uri', 'data-ew-init', 'contenteditable'],
         /**
          * Event bindings
          * @type {object}
@@ -29,9 +29,17 @@ function (Vent, BaseView, etch) {
             // Store reference to app
             this.app = options.app;
 
+            // Store reference to the view on its DOM node
+            // This is used later to reference the widget view when you only can access the DOM node
+            // NOTE: This will not work on <embed> <applet> and <object> (except flash) tags\
+            this.$el.data('ew.widget', this);
+
             // Uses easelweb attributes on the root element
             // to generate a model schema.
             this.generateSchema();
+
+            // Try running the initialization callback
+            this.runInit();
         },
         /**
          * Disable all widget interaction to allow normal interaction with the html
@@ -56,6 +64,18 @@ function (Vent, BaseView, etch) {
 
             // Add widget class
             this.$el.addClass(this.app.config.widgetClass);
+        },
+        /**
+         * Enable widget interaction
+         */
+        runInit: function() {
+            // Check for a re-init function
+            if (this.$el.attr('data-ew-init')) {
+                if (_.isFunction(window[this.$el.attr('data-ew-init')])) {
+                    // Run function in context of the widget's element
+                    window[this.$el.attr('data-ew-init')].call(this.el);
+                }
+            }
         },
         /**
          * Store easelweb data attributes (data-ew) on the attached model.
@@ -131,22 +151,35 @@ function (Vent, BaseView, etch) {
          * @param {string} newHTML The html string that will replace the existing widget html
          */
         updateHTML: function(newHTML) {
-            // Check for existing widgets within this widget, so we can remove them
-            this.$(this.app.config.selector).each(function (idx, elem) {
-                Vent.trigger('app:removeWidgetById', $(elem).data('cid'));
+            // Remove child widgets from application tracker, since we are updating HTML and will blow
+            // away the original elements
+            this.$(this.app.config.widgetSelector).each(function (idx, elem) {
+                // Check to see if the element has a widget attach to it
+                // because if it doesn't that means there is nothing to remove in the tracker.
+                // This happens because nested widgets are removed by the widgets they are contained in
+                if ($(elem).data('ew.widget')) {
+                    $(elem).data('ew.widget').destroy();
+                }
             });
 
             // Create new element, base on the HTML string passed
             var $new_elem = $(newHTML);
 
-            // Do whole replace of the widget html, included the root element
+            // Do whole replace of the widget html, including the root element
             this.$el.replaceWith($new_elem);
 
             // Move all event listeners to the new dom element
             this.setElement($new_elem[0]);
 
+            // Re-generate schema
+            // in case there are any new attributes added
+            this.generateSchema();
+
+            // Re run the initialization callback
+            this.runInit();
+
             // Re-Initialize any child widgets within this widget
-            this.$(this.app.config.selector).each(function (idx, elem) {
+            this.$(this.app.config.widgetSelector).each(function (idx, elem) {
                 Vent.trigger('app:initWidget', elem);
             });
         },
@@ -156,6 +189,25 @@ function (Vent, BaseView, etch) {
          */
         initToolbar: function (e) {
             etch.editableInit(e, this);
+        },
+        /**
+         * Destroy the widget, removing it from the dom and from the application widget tracker.
+         * Will also remove any child widgets it finds.
+         * @param {object} e Event object
+         */
+        destroy: function () {
+            // Look for child widgets and remove them first
+            this.$(this.app.config.widgetSelector).each(function (idx, elem) {
+                if ($(elem).data('ew.widget')) {
+                    $(elem).data('ew.widget').destroy();
+                }
+            });
+
+            // Remove widget from tracker
+            Vent.trigger('app:removeWidget', this);
+
+            // Remove from dom
+            this.remove();
         }
     });
 

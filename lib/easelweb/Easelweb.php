@@ -102,7 +102,8 @@ class Easelweb {
         $config = getConfig()->get('easelweb');
 
         // Store sandbox path on file system
-        $sandbox_path = $config['sandbox']['sandbox_path'];
+        // normalize path by removing trailing slash
+        $sandbox_path = rtrim($config['sandbox']['sandbox_path'], '/');
 
         // Load session
         $session = EpiSession::getInstance(EpiSession::PHP);
@@ -141,7 +142,7 @@ class Easelweb {
                     }
 
                     // Write resource back to sandbox place
-                    //file_put_contents($sandbox_path.'/'.$uri, $doc->html());
+                    file_put_contents($sandbox_path.'/'.$uri, $doc->html());
 
                     // Track the uri updated
                     array_push($updated, $sandbox_path.'/'.$uri_parts['path'].$uri_parts['fragment']);

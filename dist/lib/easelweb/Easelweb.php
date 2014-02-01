@@ -146,14 +146,14 @@ class Easelweb {
                         };
 
                         // Update document 
-                        pq('[data-ew-uri="'.$uri_parts['path'].$uri_parts['fragment'].'"]', $doc)->replaceWith($doc_content->html());   
+                        pq('[data-ew-uri="'.$uri_parts['path'].(!empty($uri_parts['fragment']) ? '#'.$uri_parts['fragment'] : '').'"]', $doc)->replaceWith($doc_content->html());   
                     }
 
                     // Write document back to sandbox
                     file_put_contents($sandbox_path.'/'.$uri_parts['path'], trim($doc->html()));
 
                     // Track the uri updated
-                    array_push($updated, $sandbox_path.'/'.$uri_parts['path'].$uri_parts['fragment']);
+                    array_push($updated, $sandbox_path.'/'.$uri_parts['path'].(!empty($uri_parts['fragment']) ? '#'.$uri_parts['fragment'] : ''));
                 }
             }
 

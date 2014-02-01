@@ -15,12 +15,12 @@
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
-        define(['jquery'], factory);
+        define([], factory);
     } else {
         // Browser globals:
         factory(window.jQuery);
     }
-}(function ($) {
+}(function () {
     'use strict';
 
     // Helper variable to create unique names for the transport iframes:

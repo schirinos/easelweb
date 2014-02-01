@@ -2,11 +2,10 @@
     Etch.js
  */
 define([
-    'jquery',
     'backbonePkg',
     'easelweb/vent'
 ],
-function ($, Backbone, Vent) {
+function (Backbone, Vent) {
     // Instantiate variables
     var models = {},
         views = {},
@@ -105,7 +104,10 @@ function ($, Backbone, Vent) {
             // Get the current widget
             var widget = this.model.get('widget');
            
-            // Destroy the widget
+            // Destroy widget
+            widget.destroy();
+
+            // Remove widget from tracker
             Vent.trigger('app:removeWidget', widget);
         },
         /**
@@ -364,7 +366,7 @@ function ($, Backbone, Vent) {
             var $editable = $(target).etchFindEditable();
 
             // Only "html" types are editable directly
-            if ($editable.attr('data-ew-type') === 'html') {
+            if ($editable.attr('data-ew-widget') === 'html') {
                 $editable.attr('contenteditable', true);
             }
 

@@ -17,14 +17,13 @@
     if (typeof define === 'function' && define.amd) {
         // Register as an anonymous AMD module:
         define([
-            'jquery',
             'fileupload/vendor/jquery.ui.widget'
         ], factory);
     } else {
         // Browser globals:
         factory(window.jQuery);
     }
-}(function ($) {
+}(function () {
     'use strict';
 
     // Detect file input support, based on

@@ -33,7 +33,7 @@ return array(
 
         // The files/directories that are copied to the sandbox need to be explicitly specified.
         // Files and directories are relative to the 'mirror_path' setting.
-        'filter' => array('index.php', 'images'),
+        'filter' => array('index.php', 'assets', 'includes'),
 
         // Location of easelweb sandbox.
         'sandbox_path' => $easelweb_root_path.'/sandbox/',
@@ -47,11 +47,11 @@ return array(
         // The folder to store uploaded images. This can be changes to anything you want.
         // To save space it is advised to leave this directory out of your sandbox filter configuration.
         // Just make sure you use absolute url paths to file in this directory when designing your site.
-        'upload_dir' => $_SERVER['DOCUMENT_ROOT'].'/images/',
+        'upload_dir' => $easelweb_root_path.'/../images/',
 
         // This directory is the url returned to the uploader control when you upload a file.
         // It needs to match the 'upload_dir' setting.
-        'upload_url' => '/images/',
+        'upload_url' => $easelweb_root_url.'/../images/',
 
 
         // Thumbnails are used when you upload a file to give a preview

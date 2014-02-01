@@ -2,14 +2,13 @@
     Easelweb Toolbar View - 
  */
 define([
-    'jquery',
     'easelweb/vent',
     'easelweb/views/base',
     'require/text!easelwebTpl/toolbar.html',
     'codemirrorPkg',
     'require/text!easelwebTpl/uploader.html'
 ],
-function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
+function (Vent, BaseView, Tpl, CodeMirror, TplUploader) {
     // Easelweb toolbar
     var exports = BaseView.extend({
         /**
@@ -135,6 +134,12 @@ function ($, Vent, BaseView, Tpl, CodeMirror, TplUploader) {
          */
         actionHide: function (e) {
             e.preventDefault();
+
+            // Run widget init callback
+            // to upate any changes from the form
+            if (this.currentWidget) {
+                this.currentWidget.runInit();
+            }
 
             // Cleanup editor and all tools
             this.hideTools(true);

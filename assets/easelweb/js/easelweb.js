@@ -66,7 +66,7 @@ function (Backbone, Vent, etch, ToolbarView, WidgetView, WidgetModel) {
         }
 
         // Pass configuration to etch
-        etch.setConfig(app.config);
+        etch.setConfig({selector: app.config.widgetSelector, buttonClasses: app.config.buttonClasses});
 
         // Create toolbar model
         var toolbar_model = new Backbone.Model();

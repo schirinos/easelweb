@@ -4,9 +4,10 @@
 define([
     'easelweb/vent',
     'easelweb/views/base',
-    'etch'
+    'etch',
+    'easelweb/cookies'
 ],
-function (Vent, BaseView, etch) {
+function (Vent, BaseView, etch, Cookies) {
     // Easelweb widget view
     var exports = BaseView.extend({
         /**
@@ -69,8 +70,8 @@ function (Vent, BaseView, etch) {
          * Enable widget interaction
          */
         runInit: function() {
-            // Check for a re-init function
-            if (this.$el.attr('data-ew-init')) {
+            // Check for a re-init function, only run in easelweb mode
+            if (this.$el.attr('data-ew-init') && Cookies.hasItem('easelweb')) {
                 if (_.isFunction(window[this.$el.attr('data-ew-init')])) {
                     // Run function in context of the widget's element
                     window[this.$el.attr('data-ew-init')].call(this.el);
@@ -188,6 +189,10 @@ function (Vent, BaseView, etch) {
          * @param {object} e Event object
          */
         initToolbar: function (e) {
+            // Prevents things link links from activating
+            // while in widget mode
+            e.preventDefault();
+
             etch.editableInit(e, this);
         },
         /**

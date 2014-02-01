@@ -142,10 +142,12 @@ class DOMDocumentWrapper {
 		$addDocumentCharset = false;
 		if ($documentCharset) {
 			$charset = $documentCharset;
-			$markup = $this->charsetFixHTML($markup);
+			// Don't fix the charset location at all
+			//$markup = $this->charsetFixHTML($markup);
 		} else if ($requestedCharset) {
 			$charset = $requestedCharset;
 		}
+
 		if (! $charset)
 			$charset = phpQuery::$defaultCharset;
 		// HTTP 1.1 says that the default charset is ISO-8859-1
@@ -176,7 +178,9 @@ class DOMDocumentWrapper {
 				if ($docEncoding !== $requestedCharset) {
 					phpQuery::debug("CONVERT $docEncoding => $requestedCharset");
 					$markup = mb_convert_encoding($markup, $requestedCharset, $docEncoding);
-					$markup = $this->charsetAppendToHTML($markup, $requestedCharset);
+					// NOTE: Never add charset to fragments
+					if (! $this->isDocumentFragment)
+						$markup = $this->charsetAppendToHTML($markup, $requestedCharset);
 					$charset = $requestedCharset;
 				}
 			} else {
@@ -190,6 +194,7 @@ class DOMDocumentWrapper {
 		} else {
 			if ($addDocumentCharset) {
 				phpQuery::debug("Full markup load (HTML), appending charset: '$charset'");
+				// NOTE: Removed by sig, don't need
 				$markup = $this->charsetAppendToHTML($markup, $charset);
 			}
 			phpQuery::debug("Full markup load (HTML), documentCreate('$charset')");

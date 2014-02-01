@@ -101,8 +101,8 @@ class Easelweb {
         // Get config
         $config = getConfig()->get('easelweb');
 
-        // Store sandbox path on file system
-        $sandbox_path = $config['sandbox']['sandbox_path'];
+        // Get sandbox path normalize path by removing trailing slash
+        $sandbox_path = rtrim($config['sandbox']['sandbox_path'], '/');
 
         // Load session
         $session = EpiSession::getInstance(EpiSession::PHP);
@@ -133,15 +133,24 @@ class Easelweb {
                     // Load in the resource we are going to modify
                     // which for now is an html file
                     $doc = phpQuery::newDocumentFileHTML($sandbox_path.'/'.$uri_parts['path'], $charset = 'utf-8');
-
+                    
                     // Update region content
                     if (isset($region['content'])) {
-                        // TODO:Remove subregions from content
-                        pq('[data-ew-uri="'.$uri_parts['path'].$uri_parts['fragment'].'"]')->replaceWith($region['content']);   
+                        // Load the region content as a document so that we can modify it
+                        $doc_content = phpQuery::newDocument($region['content']);
+                        
+                        // Look for subregions within the region, ie: data-ew-uri
+                        foreach ($doc_content->children()->find('[data-ew-uri]') as $node) {
+                            $sub_uri = pq($node)->attr('data-ew-uri');
+                            pq($node, $doc_content)->replaceWith('<?php include "'.$sub_uri.'"; ?>');
+                        };
+
+                        // Update document 
+                        pq('[data-ew-uri="'.$uri_parts['path'].$uri_parts['fragment'].'"]', $doc)->replaceWith($doc_content->html());   
                     }
 
-                    // Write resource back to sandbox place
-                    //file_put_contents($sandbox_path.'/'.$uri, $doc->html());
+                    // Write document back to sandbox
+                    file_put_contents($sandbox_path.'/'.$uri_parts['path'], trim($doc->html()));
 
                     // Track the uri updated
                     array_push($updated, $sandbox_path.'/'.$uri_parts['path'].$uri_parts['fragment']);

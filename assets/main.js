@@ -9,15 +9,10 @@ require.config({
         fileupload: 'fileupload/js',
         easelweb: 'easelweb/js',
         easelwebTpl: 'easelweb/tpl',
-        jquery: 'jquery/js/jquery',
-        bootstrap: 'bootstrap/js/bootstrap'
     },
 
     // Shim config for js libraries that don't use AMD "define"
     shim: {
-        'bootstrap': {
-            deps: ['jquery'],
-        },
         // Backbone
         'backbone/underscore': {
             exports: '_'
@@ -29,7 +24,7 @@ require.config({
             deps: ['backbone/backbone-forms'],
         },
         'backbone/backbone': {
-            deps: ['jquery', 'backbone/underscore'],
+            deps: ['backbone/underscore'],
             exports: 'Backbone'
         },
         // Codemirror
@@ -62,6 +57,6 @@ if (!String.prototype.trim) {
 }
 
 // Load application
-require( ['easelweb/easelweb', 'bootstrap', 'jquery', 'fileupload/jquery.iframe-transport', 'fileupload/jquery.fileupload'], function(Easelweb, Cookies) {
+require( ['easelweb/easelweb', 'fileupload/jquery.iframe-transport', 'fileupload/jquery.fileupload'], function(Easelweb) {
     Easelweb.init();
 });

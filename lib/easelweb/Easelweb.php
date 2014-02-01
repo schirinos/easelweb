@@ -452,7 +452,7 @@ class Easelweb {
         $session->set($config['authvar'], false);
 
         // Expire login cookie
-        setcookie("easelweb", 0, time() - 3600, "/");
+        setcookie("easelweb", 0, time() - 3600, $config['home_url']);
 
         // BOunce back to home
         getRoute()->redirect($config['home_url']); 
